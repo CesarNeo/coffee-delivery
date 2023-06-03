@@ -5,8 +5,15 @@ import { Text } from '../components/Text'
 import { Root as SelectRadioContainer } from '@radix-ui/react-radio-group'
 import { SelectRadioItem } from '../components/SelectRadioItem'
 import { CoffeeCartItem } from '../components/CoffeeCartItem'
+import { useNavigate } from 'react-router-dom'
 
 export function Checkout() {
+  const navigate = useNavigate()
+
+  const handleConfirmOrder = () => {
+    navigate('/success')
+  }
+
   return (
     <main className="grid grid-cols-[2fr,1fr] gap-8 px-40 pb-40 pt-10">
       <section>
@@ -117,6 +124,7 @@ export function Checkout() {
           </div>
 
           <button
+            onClick={handleConfirmOrder}
             type="button"
             className="mt-8 w-full rounded-md bg-theme-yellow-500 px-2 py-3 text-center text-sm font-bold uppercase text-theme-white-100 transition-colors duration-200 hover:bg-theme-yellow-800"
           >
