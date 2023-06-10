@@ -26,11 +26,16 @@ export const CoffeeCartItem: FunctionComponent<CoffeeCartItemProps> = ({
 
   return (
     <div>
-      <div className="mb-6 flex justify-between">
+      <div className="mb-6">
         <div className="flex items-center gap-5">
           <img src={coffee.image} alt={coffee.name} className="h-16 w-16" />
           <div>
-            <Text size="M">{coffee.name}</Text>
+            <div>
+              <Text size="M">{coffee.name}</Text>
+              <Text size="M" weight="bold" className="text-theme-gray-500">
+                {coffeePriceFormatted}
+              </Text>
+            </div>
 
             <div className="mt-2 flex gap-2">
               <Input.Number coffee={coffee} />
@@ -45,9 +50,6 @@ export const CoffeeCartItem: FunctionComponent<CoffeeCartItemProps> = ({
             </div>
           </div>
         </div>
-        <Text size="M" weight="bold" className="text-theme-gray-500">
-          {coffeePriceFormatted}
-        </Text>
       </div>
 
       <hr className="bg-theme-white-500" />

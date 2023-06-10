@@ -9,7 +9,7 @@ import { COFFEE_DATA } from '../utils/constants/coffee'
 export function Home() {
   return (
     <main className="pb-40">
-      <div className="grid grid-cols-2 items-center gap-14 bg-[url('./assets/background.svg')] bg-cover bg-center bg-no-repeat px-40 pb-28 pt-24">
+      <div className="items-center gap-14 bg-[url('./assets/background.svg')] bg-cover bg-center bg-no-repeat px-6 pt-5 md:grid md:grid-cols-2 md:px-40 md:pb-28 md:pt-24">
         <div>
           <Title className="max-w-[588px] text-theme-gray-700">
             Encontre o café perfeito para qualquer hora do dia
@@ -19,7 +19,7 @@ export function Home() {
             hora
           </Text>
 
-          <div className="mt-16 grid grid-cols-2 gap-10 gap-y-5">
+          <div className="mt-8 grid gap-10 gap-y-5 md:mt-16 md:grid-cols-2">
             <ContainerQualification
               icon="shopping-cart"
               description="Compra simples e segura"
@@ -42,16 +42,16 @@ export function Home() {
         <img
           src={coffeeDeliveryBanner}
           alt="Coffee Delivery"
-          className="h-full max-h-[360px] w-full max-w-[476px]"
+          className="hidden h-full max-h-[360px] w-full max-w-[476px] md:block"
         />
       </div>
 
-      <div className="mt-8 px-40">
+      <div className="mt-8 px-6 md:px-40">
         <Title size="L" className="text-theme-gray-700">
           Nossos cafés
         </Title>
 
-        <div className="mt-14 grid grid-cols-[repeat(auto-fill,256px)] gap-x-8 gap-y-10">
+        <div className="mt-14 flex flex-col items-center gap-x-8 gap-y-10 md:grid md:grid-cols-[repeat(auto-fill,256px)]">
           {COFFEE_DATA.map((coffee) => (
             <CoffeeCard key={coffee.id} coffee={coffee} />
           ))}

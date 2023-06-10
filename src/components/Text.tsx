@@ -17,8 +17,8 @@ export const Text: FunctionComponent<TextProps> = ({
   return (
     <p
       className={clsx(`leading-snug ${className}`, {
-        'text-xl font-bold': size === 'L' && weight === 'bold',
-        'text-xl font-normal': size === 'L' && weight === 'normal',
+        'text-lg font-bold md:text-xl': size === 'L' && weight === 'bold',
+        'text-lg font-normal md:text-xl': size === 'L' && weight === 'normal',
         'text-base font-bold': size === 'M' && weight === 'bold',
         'text-base font-normal': size === 'M' && weight === 'normal',
         'text-sm': size === 'S',

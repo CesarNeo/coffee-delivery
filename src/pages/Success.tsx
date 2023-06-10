@@ -7,7 +7,7 @@ import motoboyFloorImage from '../assets/motoboy-floor.svg'
 
 export function Success() {
   return (
-    <main className="px-40 py-20">
+    <main className="px-6 py-10 md:px-40 md:py-20">
       <Title size="L" className="text-theme-yellow-800">
         Uhu! Pedido confirmado
       </Title>
@@ -15,7 +15,7 @@ export function Success() {
         Agora é só aguardar que logo o café chegará até você
       </Text>
 
-      <div className="grid grid-cols-2 items-start gap-[102px]">
+      <div className="grid items-start gap-[102px] md:grid-cols-2">
         <div className="mt-10 flex flex-col gap-8 rounded-bl-[36px] rounded-br-md rounded-tl-md rounded-tr-[36px] border border-theme-yellow-500 p-10">
           <div className="flex items-center gap-3">
             <div className="h-8 w-8 rounded-full bg-theme-purple-500 p-2">

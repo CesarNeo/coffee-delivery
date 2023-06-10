@@ -40,7 +40,7 @@ export function Checkout() {
     handleSubmit((data) => {
       console.log(data)
     })()
-    // navigate('/success')
+    navigate('/success')
   }
 
   const totalCoffeePrice = coffee.reduce((acc, coffee) => {
@@ -76,13 +76,13 @@ export function Checkout() {
   )
 
   return (
-    <main className="grid grid-cols-[2fr,1fr] gap-8 px-40 pb-40 pt-10">
+    <main className="flex flex-col gap-8 px-6 pb-20 pt-5 md:grid md:grid-cols-[2fr,1fr] md:px-40 md:pb-40 md:pt-10">
       <section>
         <Title size="XS">Complete seu pedido</Title>
 
-        <div className="mt-4 w-full rounded-md bg-theme-white-300 p-10">
+        <div className="mt-4 w-full rounded-md bg-theme-white-300 p-5 md:p-10">
           <div className="flex items-start gap-3">
-            <MapPinLine size={22} className="text-theme-yellow-800" />
+            <MapPinLine className="h-5 w-5 text-theme-yellow-800 md:h-[22px] md:w-[22px]" />
 
             <div>
               <Text size="M">Endereço de entrega</Text>
@@ -92,11 +92,11 @@ export function Checkout() {
             </div>
           </div>
 
-          <div className=" mt-8 flex w-full flex-col gap-4">
+          <div className="mt-8 flex w-full flex-col gap-4">
             <Input.Text
               type="number"
               placeholder="CEP"
-              className="max-w-[200px]"
+              className="md:max-w-[200px]"
               {...register('zipCode')}
               error={errors.zipCode?.message}
               onBlur={checkZipCode}
@@ -108,7 +108,7 @@ export function Checkout() {
               error={errors.street?.message}
             />
 
-            <div className="grid grid-cols-[1fr,2fr] gap-3">
+            <div className="grid gap-3 md:grid-cols-[1fr,2fr]">
               <Input.Text
                 type="number"
                 placeholder="Número"
@@ -129,7 +129,7 @@ export function Checkout() {
                 error={errors.neighborhood?.message}
               />
 
-              <div className="flex items-center gap-3">
+              <div className="flex gap-3 md:items-center">
                 <Input.Text
                   type="text"
                   placeholder="Cidade"
@@ -150,7 +150,7 @@ export function Checkout() {
           </div>
         </div>
 
-        <div className="mt-4 w-full rounded-md bg-theme-white-300 p-10">
+        <div className="mt-4 w-full rounded-md bg-theme-white-300 p-5 md:p-10">
           <div className="flex items-start gap-3">
             <CurrencyDollar size={22} className="text-theme-purple-500" />
 
@@ -163,7 +163,7 @@ export function Checkout() {
           </div>
 
           <SelectRadioContainer
-            className="mt-8 flex items-center gap-3"
+            className="mt-8 flex flex-col gap-3 md:flex-row md:items-center"
             onValueChange={handlePaymentMethodChange}
             value={paymentMethod}
           >
@@ -185,7 +185,7 @@ export function Checkout() {
       <section>
         <Title size="XS">Cafés selecionados</Title>
 
-        <div className="mt-4 rounded-bl-[36px] rounded-br-md rounded-tl-md rounded-tr-[36px] bg-theme-white-300 p-10">
+        <div className="mt-4 rounded-bl-[36px] rounded-br-md rounded-tl-md rounded-tr-[36px] bg-theme-white-300 p-5 md:p-10">
           <div className="flex flex-col gap-6">
             {coffee.map((coffee) => (
               <CoffeeCartItem key={coffee.id} coffee={coffee} />

@@ -8,7 +8,7 @@ export const Header = () => {
   const { coffee } = useCart()
 
   return (
-    <header className="flex items-center justify-between px-40 py-8">
+    <header className="flex items-center justify-between px-6 py-8 md:px-40">
       <a href="/">
         <img src={coffeeDeliveryLogo} alt="Coffee Delivery logo" />
       </a>

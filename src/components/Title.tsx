@@ -15,7 +15,7 @@ export const Title: FunctionComponent<TitleProps> = ({
   return (
     <h1
       className={clsx(`font-alt leading-snug ${className}`, {
-        'text-5xl font-extrabold': size === 'XL',
+        'text-3xl font-extrabold md:text-5xl': size === 'XL',
         'text-3xl font-extrabold': size === 'L',
         'text-2xl font-extrabold': size === 'M',
         'text-xl font-bold': size === 'S',
