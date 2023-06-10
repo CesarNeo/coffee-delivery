@@ -4,6 +4,7 @@ import * as Input from './Input'
 import { Text } from './Text'
 import { Title } from './Title'
 import { ShoppingCart } from '@phosphor-icons/react'
+import { useCart } from '../hooks/cart'
 
 type CoffeeCardProps = {
   coffee: {
@@ -27,19 +28,25 @@ const CoffeeTag: FunctionComponent<{ tag: string }> = ({ tag }) => {
 }
 
 export const CoffeeCard: FunctionComponent<CoffeeCardProps> = ({ coffee }) => {
+  const { addCoffee } = useCart()
+
   const coffeePriceFormatted = coffee.price
     .toLocaleString('pt-BR', {
       minimumFractionDigits: 2,
     })
     .replace('.', ',')
 
+  function handleAddCoffee() {
+    addCoffee(coffee)
+  }
+
   return (
-    <div className="flex min-h-[310px] w-full max-w-[256px] flex-col items-center justify-between rounded-bl-[36px] rounded-br-md rounded-tl-md rounded-tr-[36px] bg-theme-white-300 px-5 pb-5 text-center">
+    <div className="group flex min-h-[310px] w-full max-w-[256px] flex-col items-center justify-between rounded-bl-[36px] rounded-br-md rounded-tl-md rounded-tr-[36px] bg-theme-white-300 px-5 pb-5 text-center">
       <div>
         <img
           src={coffee.image}
           alt={coffee.name}
-          className="mx-auto -mt-5 h-32 w-32"
+          className="mx-auto -mt-5 h-32 w-32 transition-transform duration-200 group-hover:scale-105"
         />
         <div className="mt-3 flex w-full justify-center gap-1">
           {coffee.tag.map((tag) => (
@@ -64,11 +71,13 @@ export const CoffeeCard: FunctionComponent<CoffeeCardProps> = ({ coffee }) => {
           </Title>
         </div>
 
-        <Input.Number />
+        <Input.Number coffee={coffee} />
 
         <button
           type="button"
           className="ml-2 flex h-[38px] w-[38px] items-center justify-center rounded-md bg-theme-purple-800 text-theme-white-300 transition-colors hover:bg-theme-purple-500"
+          title={`Adicionar "${coffee.name}" ao carrinho`}
+          onClick={handleAddCoffee}
         >
           <ShoppingCart size={22} weight="fill" />
         </button>

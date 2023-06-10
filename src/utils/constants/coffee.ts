@@ -1,4 +1,6 @@
-export const COFFEE_DATA = [
+import { Coffee } from '../../types/coffee'
+
+export const COFFEE_DATA: Coffee[] = [
   {
     id: 1,
     name: 'Expresso Tradicional',

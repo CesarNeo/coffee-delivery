@@ -1,18 +1,79 @@
 import { Title } from '../components/Title'
 import * as Input from '../components/Input'
-import { CreditCard, CurrencyDollar, MapPinLine } from '@phosphor-icons/react'
+import {
+  Bank,
+  CreditCard,
+  CurrencyDollar,
+  MapPinLine,
+  Money,
+} from '@phosphor-icons/react'
 import { Text } from '../components/Text'
 import { Root as SelectRadioContainer } from '@radix-ui/react-radio-group'
 import { SelectRadioItem } from '../components/SelectRadioItem'
 import { CoffeeCartItem } from '../components/CoffeeCartItem'
 import { useNavigate } from 'react-router-dom'
+import { useCart } from '../hooks/cart'
+import { formatPriceWithDollarSign } from '../utils/functions/format-price'
+import { PaymentMethod } from '../types/payment'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import {
+  CheckoutOrderFormData,
+  checkoutOrderAddressSchema,
+} from '../utils/zod-validations/checkout-address'
+import { ChangeEvent, useCallback } from 'react'
+import { findAddressRequest } from '../services/http/address'
 
 export function Checkout() {
   const navigate = useNavigate()
+  const { coffee, addPaymentMethod, paymentMethod } = useCart()
+  const {
+    register,
+    setValue,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<CheckoutOrderFormData>({
+    resolver: zodResolver(checkoutOrderAddressSchema),
+  })
 
   const handleConfirmOrder = () => {
-    navigate('/success')
+    handleSubmit((data) => {
+      console.log(data)
+    })()
+    // navigate('/success')
   }
+
+  const totalCoffeePrice = coffee.reduce((acc, coffee) => {
+    return acc + coffee.price * coffee.quantity!
+  }, 0)
+  const totalOrderPrice = formatPriceWithDollarSign(totalCoffeePrice + 3)
+  const deliveryPrice = formatPriceWithDollarSign(3)
+  const totalCoffeePriceFormatted = formatPriceWithDollarSign(totalCoffeePrice)
+
+  function handlePaymentMethodChange(value: string) {
+    const paymentMethod = value as PaymentMethod
+    addPaymentMethod(paymentMethod)
+  }
+
+  const checkZipCode = useCallback(
+    async (e: ChangeEvent<HTMLInputElement>) => {
+      const { value } = e.target
+      if (!value) return
+
+      const cep = value.replace(/\D/g, '')
+      const address = await findAddressRequest(cep)
+
+      if (address) {
+        const { logradouro, complemento, uf, localidade, bairro } = address
+        setValue('street', logradouro || '')
+        setValue('complement', complemento || '')
+        setValue('state', uf || '')
+        setValue('city', localidade || '')
+        setValue('neighborhood', bairro || '')
+      }
+    },
+    [setValue],
+  )
 
   return (
     <main className="grid grid-cols-[2fr,1fr] gap-8 px-40 pb-40 pt-10">
@@ -31,35 +92,62 @@ export function Checkout() {
             </div>
           </div>
 
-          <form className=" mt-8 flex w-full flex-col gap-4">
+          <div className=" mt-8 flex w-full flex-col gap-4">
             <Input.Text
-              type="text"
+              type="number"
               placeholder="CEP"
               className="max-w-[200px]"
+              {...register('zipCode')}
+              error={errors.zipCode?.message}
+              onBlur={checkZipCode}
             />
-            <Input.Text type="text" placeholder="Rua" />
+            <Input.Text
+              type="text"
+              placeholder="Rua"
+              {...register('street')}
+              error={errors.street?.message}
+            />
 
             <div className="grid grid-cols-[1fr,2fr] gap-3">
-              <Input.Text type="number" placeholder="Número" />
-              <Input.Text type="text" placeholder="Complemento" isOptional />
+              <Input.Text
+                type="number"
+                placeholder="Número"
+                {...register('number')}
+                error={errors.number?.message}
+              />
+              <Input.Text
+                type="text"
+                placeholder="Complemento"
+                isOptional
+                {...register('complement')}
+              />
 
-              <Input.Text type="text" placeholder="Bairro" />
+              <Input.Text
+                type="text"
+                placeholder="Bairro"
+                {...register('neighborhood')}
+                error={errors.neighborhood?.message}
+              />
 
               <div className="flex items-center gap-3">
                 <Input.Text
                   type="text"
                   placeholder="Cidade"
                   className="flex-1"
+                  {...register('city')}
+                  error={errors.city?.message}
                 />
                 <Input.Text
                   type="text"
                   placeholder="UF"
                   className="max-w-[60px]"
                   maxLength={2}
+                  {...register('state')}
+                  error={errors.state?.message}
                 />
               </div>
             </div>
-          </form>
+          </div>
         </div>
 
         <div className="mt-4 w-full rounded-md bg-theme-white-300 p-10">
@@ -74,17 +162,21 @@ export function Checkout() {
             </div>
           </div>
 
-          <SelectRadioContainer className="mt-8 flex items-center gap-3">
+          <SelectRadioContainer
+            className="mt-8 flex items-center gap-3"
+            onValueChange={handlePaymentMethodChange}
+            value={paymentMethod}
+          >
             <SelectRadioItem value="creditCard">
               <CreditCard size={16} className="text-theme-purple-500" />
               cartão de crédito
             </SelectRadioItem>
             <SelectRadioItem value="debitCard">
-              <CreditCard size={16} className="text-theme-purple-500" />
+              <Bank size={16} className="text-theme-purple-500" />
               cartão de débito
             </SelectRadioItem>
             <SelectRadioItem value="money">
-              <CreditCard size={16} className="text-theme-purple-500" />
+              <Money size={16} className="text-theme-purple-500" />
               dinheiro
             </SelectRadioItem>
           </SelectRadioContainer>
@@ -94,7 +186,11 @@ export function Checkout() {
         <Title size="XS">Cafés selecionados</Title>
 
         <div className="mt-4 rounded-bl-[36px] rounded-br-md rounded-tl-md rounded-tr-[36px] bg-theme-white-300 p-10">
-          <CoffeeCartItem />
+          <div className="flex flex-col gap-6">
+            {coffee.map((coffee) => (
+              <CoffeeCartItem key={coffee.id} coffee={coffee} />
+            ))}
+          </div>
 
           <div className="mt-6 flex w-full flex-col gap-3">
             <div className="flex items-center justify-between">
@@ -102,7 +198,7 @@ export function Checkout() {
                 Total de itens
               </Text>
               <Text size="M" className="text-theme-gray-800">
-                R$ 29,90
+                {totalCoffeePriceFormatted}
               </Text>
             </div>
             <div className="flex items-center justify-between">
@@ -110,7 +206,7 @@ export function Checkout() {
                 Entrega
               </Text>
               <Text size="M" className="text-theme-gray-800">
-                R$ 3,00
+                {deliveryPrice}
               </Text>
             </div>
             <div className="flex items-center justify-between">
@@ -118,7 +214,7 @@ export function Checkout() {
                 Total
               </Text>
               <Text size="L" weight="bold" className="text-theme-gray-600">
-                R$ 29,90
+                {totalOrderPrice}
               </Text>
             </div>
           </div>
